@@ -69,8 +69,11 @@ const DEFAULT_CONFIG: GuardrailsConfig = {
 /**
  * Load configuration from guardrails.json in the project directory
  * or from ~/.config/opencode/guardrails.json
+ * 
+ * NOTE: This function is intentionally SYNCHRONOUS to avoid blocking
+ * the OpenCode plugin chain during initialization.
  */
-export async function loadConfig(directory: string): Promise<GuardrailsConfig> {
+export function loadConfig(directory: string): GuardrailsConfig {
   const configPaths = [
     path.join(directory, "guardrails.json"),
     path.join(directory, ".opencode", "guardrails.json"),
@@ -83,14 +86,11 @@ export async function loadConfig(directory: string): Promise<GuardrailsConfig> {
         const content = fs.readFileSync(configPath, "utf-8");
         const parsed = JSON.parse(content);
         const validated = GuardrailsConfigSchema.parse(parsed);
-        console.log(`[Guardrails] Loaded config from ${configPath}`);
         return validated;
       }
-    } catch (error) {
-      console.warn(`[Guardrails] Failed to load config from ${configPath}:`, error);
+    } catch {
     }
   }
 
-  console.log("[Guardrails] Using default configuration");
   return DEFAULT_CONFIG;
 }
