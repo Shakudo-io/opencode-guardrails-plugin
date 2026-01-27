@@ -1,0 +1,21 @@
+{
+  "$schema": "./guardrails.schema.json",
+  "enabled": true,
+  "istio": {
+    "enabled": true,
+    "severity": "block",
+    "allowedNamespaces": [],
+    "allowedResources": []
+  },
+  "keycloak": {
+    "enabled": true,
+    "severity": "block",
+    "allowedNamespaces": [],
+    "allowedResources": []
+  },
+  "customPatterns": [],
+  "audit": {
+    "enabled": true,
+    "logFile": ".opencode/guardrails-audit.log"
+  }
+}
