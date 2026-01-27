@@ -1,6 +1,6 @@
 {
   "name": "opencode-guardrails",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "OpenCode plugin for protecting Istio and Keycloak resources with human approval guardrails",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

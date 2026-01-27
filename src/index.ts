@@ -23,42 +23,29 @@ export const GuardrailsPlugin: Plugin = ({ client, project, directory }) => {
   }
 
   const hooks: Hooks = {
-    "permission.ask": async (input, output) => {
-      try {
-        if (input.type !== "bash") {
-          return;
-        }
-
-        const patterns = input.pattern;
-        const command = Array.isArray(patterns) ? patterns[0] : patterns || "";
-
-        const detection = detectGuardrail(command, config);
-
-        if (detection.triggered) {
-          output.status = "ask";
-
-          auditLog({
-            type: "triggered",
-            detection,
-            sessionID: input.sessionID,
-            command,
-            timestamp: new Date().toISOString(),
-          }).catch(() => {});
-        }
-      } catch {
-      }
-    },
-
     "tool.execute.before": async (input, output) => {
-      try {
-        if (input.tool !== "bash") return;
-        const command = output.args?.command || "";
-        if (
-          command.includes("kubectl") &&
-          (command.includes("-f ") || command.includes("--filename"))
-        ) {
-        }
-      } catch {
+      if (input.tool !== "bash") return;
+      
+      const command = output.args?.command || "";
+      const detection = detectGuardrail(command, config);
+
+      if (detection.triggered) {
+        auditLog({
+          type: "blocked",
+          detection,
+          sessionID: input.sessionID,
+          command,
+          timestamp: new Date().toISOString(),
+        }).catch(() => {});
+
+        throw new Error(
+          `🛡️ GUARDRAIL BLOCKED: ${detection.category} modification detected.\n\n` +
+          `Command: ${command}\n` +
+          `Resource: ${detection.resourceType || "unknown"}\n` +
+          `Reason: ${detection.reason}\n\n` +
+          `This command would modify protected ${detection.category} resources. ` +
+          `If you need to run this command, please ask the user for explicit approval first.`
+        );
       }
     },
   };
