@@ -1,0 +1,50 @@
+{
+  "name": "opencode-guardrails",
+  "version": "0.1.0",
+  "description": "OpenCode plugin for protecting Istio and Keycloak resources with human approval guardrails",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "bun build src/index.ts --outdir dist --target node",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "prepublishOnly": "bun run build"
+  },
+  "keywords": [
+    "opencode",
+    "plugin",
+    "guardrails",
+    "kubernetes",
+    "istio",
+    "keycloak",
+    "security"
+  ],
+  "author": "Shakudo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Shakudo-io/opencode-guardrails-plugin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Shakudo-io/opencode-guardrails-plugin/issues"
+  },
+  "homepage": "https://github.com/Shakudo-io/opencode-guardrails-plugin#readme",
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.1.21",
+    "yaml": "^2.3.4",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0"
+  },
+  "peerDependencies": {
+    "@opencode-ai/plugin": ">=1.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ]
+}
