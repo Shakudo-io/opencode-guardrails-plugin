@@ -38,15 +38,12 @@ export const GuardrailsPlugin: Plugin = async ({ client, project, directory }) =
       const detection = detectGuardrail(command, config);
 
       if (detection.triggered) {
-        // Always require explicit approval for guardrail matches
         output.status = "ask";
 
-        // Enhance the permission message with guardrail context
-        input.message = formatGuardrailWarning(detection);
-
-        // Store detection info in metadata for audit
-        input.metadata = input.metadata || {};
-        input.metadata.guardrail = detection;
+        const metadata = (input.metadata ?? {}) as Record<string, unknown>;
+        metadata.guardrail = detection;
+        metadata.guardrailWarning = formatGuardrailWarning(detection);
+        (input as { metadata: Record<string, unknown> }).metadata = metadata;
 
         // Log the detection
         await auditLog({
