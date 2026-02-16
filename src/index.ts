@@ -22,12 +22,17 @@ export const GuardrailsPlugin: Plugin = ({ client, project, directory }) => {
     return {};
   }
 
+  console.log("[Guardrails] v0.1.4 loaded with tool.execute.before hook");
+
   const hooks: Hooks = {
     "tool.execute.before": async (input, output) => {
+      console.log("[Guardrails] hook called, tool:", input.tool);
       if (input.tool !== "bash") return;
       
       const command = output.args?.command || "";
+      console.log("[Guardrails] checking:", command.substring(0, 60));
       const detection = detectGuardrail(command, config);
+      console.log("[Guardrails] triggered:", detection.triggered);
 
       if (detection.triggered) {
         auditLog({
